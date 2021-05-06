@@ -1,7 +1,10 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Like, Repository } from 'typeorm';
-import { CreateProductDto } from './dto/create-product.dto';
+import {
+  CreateProductDto,
+  CreateProductOutput,
+} from './dto/create-product.dto';
 import {
   CategoriesOutput,
   ProductOutput,
@@ -17,7 +20,7 @@ export class ProductService {
     @InjectRepository(Product) private readonly products: Repository<Product>,
     @InjectRepository(Categories)
     private readonly categories: Repository<Categories>,
-  ) { }
+  ) {}
 
   async getAll(page = 1, pageSize = 15): Promise<ProductsOutput> {
     try {
@@ -104,20 +107,26 @@ export class ProductService {
     }
   }
 
-  async create(productData: CreateProductDto, categoryIds?: number[]) {
+  async create(
+    createProductInput: CreateProductDto,
+  ): Promise<CreateProductOutput> {
     try {
-
-      const product = this.products.create(productData);
-      if (categoryIds) {
-        const arr = await this.inputCategory(categoryIds);
+      const product = this.products.create(createProductInput);
+      if (createProductInput.categoryIds) {
+        const arr = await this.inputCategory(createProductInput.categoryIds);
         product.categories = arr;
       }
 
-      const created = await this.products.save(product);
-      return true;
+      await this.products.save(product);
+      return {
+        ok: true,
+      };
     } catch (e) {
       console.log('error');
-      return false;
+      return {
+        ok: false,
+        error: 'Could not create product',
+      };
     }
   }
 

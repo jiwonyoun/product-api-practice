@@ -7,7 +7,6 @@ import {
   Patch,
   Post,
   Query,
-  Request,
   UseGuards,
 } from '@nestjs/common';
 import {
@@ -17,9 +16,6 @@ import {
   ApiQuery,
   ApiTags,
 } from '@nestjs/swagger';
-import { Role } from 'src/role/role.enum';
-import { Roles } from 'src/role/roles.decorator';
-import { RolesGuard } from 'src/role/roles.guard';
 import { AuthGuard } from 'src/auth/auth.guard';
 import { CreateProductDto } from './dto/create-product.dto';
 import { getProductsDto } from './dto/getProducts.dto';
@@ -31,8 +27,6 @@ import {
 import { UpdateProductDto } from './dto/update-product.dto';
 import { Categories } from './entities/categories.entity';
 import { ProductService } from './products.service';
-import { GqlAuthGuard } from 'src/auth/gql-auth.guard';
-import { Product } from './entities/products.entity';
 
 @ApiBasicAuth()
 // @UseGuards(RolesGuard)
@@ -98,9 +92,8 @@ export class ProductController {
     type: CreateProductDto,
   })
   @ApiTags('상품 데이터 생성하기')
-  create(@Body() productData: CreateProductDto, data) {
-    console.log(productData);
-    return this.productService.create(productData, data);
+  create(@Body() productData: CreateProductDto) {
+    return this.productService.create(productData);
   }
 
   @ApiParam({

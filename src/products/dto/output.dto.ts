@@ -13,13 +13,11 @@ export class ProductsOutput extends CoreOutput {
   hasNext?: boolean;
 }
 
-
 @ObjectType()
 export class ProductOutput extends CoreOutput {
   @Field()
   data?: Product;
 }
-
 
 @ObjectType()
 export class CategoriesOutput extends CoreOutput {

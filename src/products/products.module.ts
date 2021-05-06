@@ -5,8 +5,6 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { Product } from './entities/products.entity';
 import { Categories } from './entities/categories.entity';
 import { ProductResolver } from './products.resolver';
-import { APP_GUARD } from '@nestjs/core';
-import { RolesGuard } from 'src/role/roles.guard';
 
 @Module({
   imports: [TypeOrmModule.forFeature([Product, Categories])],

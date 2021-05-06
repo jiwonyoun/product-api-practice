@@ -1,10 +1,8 @@
-import { UseGuards } from '@nestjs/common';
 import { Resolver, Query, Args, Mutation } from '@nestjs/graphql';
-import { type } from 'os';
-import { CurrentUser, GqlAuthGuard } from 'src/auth/gql-auth.guard';
-import { User } from 'src/users/users';
-import { UsersService } from 'src/users/users.service';
-import { CreateProductDto } from './dto/create-product.dto';
+import {
+  CreateProductDto,
+  CreateProductOutput,
+} from './dto/create-product.dto';
 import {
   CategoriesOutput,
   ProductOutput,
@@ -17,7 +15,7 @@ import { ProductService } from './products.service';
 
 @Resolver((of) => Product)
 export class ProductResolver {
-  constructor(private readonly productService: ProductService) { }
+  constructor(private readonly productService: ProductService) {}
 
   @Query(() => ProductsOutput)
   async products(): Promise<ProductsOutput> {
@@ -58,12 +56,11 @@ export class ProductResolver {
     }
   }
 
-  @Mutation((type) => Boolean)
-  async product_create(@Args('input') createProductDto: CreateProductDto) {
-    return await this.productService.create(
-      createProductDto,
-      createProductDto.categoryIds,
-    );
+  @Mutation((type) => CreateProductOutput)
+  product_create(
+    @Args('input') createProductDto: CreateProductDto,
+  ): Promise<CreateProductOutput> {
+    return this.productService.create(createProductDto);
   }
 
   @Mutation((type) => Boolean)

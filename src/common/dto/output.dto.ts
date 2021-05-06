@@ -4,8 +4,9 @@ import { Entity } from 'typeorm';
 @Entity()
 @ObjectType()
 export class CoreOutput {
-  @Field()
+  @Field(() => Boolean)
   ok: boolean;
-  @Field()
+
+  @Field(() => String)
   error?: string;
 }
