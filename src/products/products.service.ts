@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { CoreOutput } from 'src/common/dto/output.dto';
 import { Like, Repository } from 'typeorm';
 import {
   CreateProductInput,
@@ -14,7 +15,10 @@ import {
   ProductOutput,
   ProductsOutput,
 } from './dto/output.dto';
-import { UpdateProductDto } from './dto/update-product.dto';
+import {
+  UpdateProductInput,
+  UpdateProductOutput,
+} from './dto/update-product.dto';
 import { Category } from './entities/categories.entity';
 import { Product } from './entities/products.entity';
 
@@ -118,6 +122,12 @@ export class ProductService {
       const product = this.products.create(createProductInput);
       if (createProductInput.categoryIds) {
         const arr = await this.inputCategory(createProductInput.categoryIds);
+        if (arr.length === 0) {
+          return {
+            ok: false,
+            error: 'Category not found',
+          };
+        }
         product.categories = arr;
       }
       await this.products.save(product);
@@ -138,7 +148,8 @@ export class ProductService {
       for (const data of categoryId) {
         const category = await this.categories.findOne(data);
         if (!category) {
-          console.log(`category number ${categoryId} is not found`);
+          console.log(`category number ${data} is not found`);
+          return [];
         }
         categories.push(category);
       }
@@ -169,18 +180,40 @@ export class ProductService {
     }
   }
 
-  async update(id: number, updateData: UpdateProductDto): Promise<void> {
+  async update(
+    id: number,
+    updateData: UpdateProductInput,
+  ): Promise<UpdateProductOutput> {
     try {
-      const arr = await this.inputCategory(updateData.categoryIds);
-      updateData.categories = arr;
-      updateData.id = id;
-      console.log(updateData.categories);
+      const product = await this.products.findOne(id);
+      if (!product) {
+        return {
+          ok: false,
+          error: 'Product not found',
+        };
+      }
+      if (updateData.categoryIds) {
+        const arr = await this.inputCategory(updateData.categoryIds);
+        if (arr.length === 0) {
+          return {
+            ok: false,
+            error: 'Category not found',
+          };
+        }
+        updateData.categories = arr;
+      }
       await this.products.save({
+        ...product,
         ...updateData,
       });
+      return {
+        ok: true,
+      };
     } catch (e) {
-      console.log(e);
-      console.log('service error');
+      return {
+        ok: false,
+        error: 'Could not update product',
+      };
     }
   }
 }

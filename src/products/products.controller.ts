@@ -25,9 +25,7 @@ import {
   ProductOutput,
   ProductsOutput,
 } from './dto/output.dto';
-import { UpdateProductDto } from './dto/update-product.dto';
-import { Category } from './entities/categories.entity';
-import { Product } from './entities/products.entity';
+import { UpdateProductInput } from './dto/update-product.dto';
 import { ProductService } from './products.service';
 
 @ApiBasicAuth()
@@ -98,14 +96,10 @@ export class ProductController {
     return this.productService.create(createProductInput);
   }
 
-  @ApiQuery({
-    name: 'id',
-    type: DeleteProductInput,
-  })
   @Delete()
   @ApiTags('상품 데이터 삭제하기')
-  remove(@Query('id') DeleteProductInput: DeleteProductInput) {
-    return this.productService.deleteOne(DeleteProductInput);
+  remove(@Query('id') deleteProductInput: DeleteProductInput) {
+    return this.productService.deleteOne(deleteProductInput);
   }
 
   @ApiParam({
@@ -113,14 +107,13 @@ export class ProductController {
     description: '수정할 product의 ID값 입력',
   })
   @ApiBody({
-    type: UpdateProductDto,
+    type: UpdateProductInput,
   })
   @ApiTags('상품 데이터 수정하기')
   @Patch('/:id')
   patch(
     @Param('id') productId: number,
-    @Body() updateData: UpdateProductDto,
-    categories: Category[],
+    @Body() updateData: UpdateProductInput,
   ) {
     return this.productService.update(productId, updateData);
   }

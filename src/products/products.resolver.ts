@@ -9,7 +9,7 @@ import {
   ProductOutput,
   ProductsOutput,
 } from './dto/output.dto';
-import { UpdateProductDto } from './dto/update-product.dto';
+import { UpdateProductInput } from './dto/update-product.dto';
 
 import { Product } from './entities/products.entity';
 import { ProductService } from './products.service';
@@ -79,7 +79,7 @@ export class ProductResolver {
   @Mutation((type) => Boolean)
   async product_update(
     @Args('id') id: number,
-    @Args('input') updateData: UpdateProductDto,
+    @Args('input') updateData: UpdateProductInput,
   ) {
     try {
       await this.productService.update(id, updateData);
