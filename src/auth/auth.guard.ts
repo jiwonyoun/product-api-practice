@@ -10,6 +10,7 @@ export class AuthGuard implements CanActivate {
     context: ExecutionContext,
   ): boolean | Promise<boolean> | Observable<boolean> {
     const request = context.switchToHttp().getRequest().headers.authorization;
+
     const arr = JSON.stringify(request).split(' ');
     const decoded = Buffer.from(arr[1], 'base64').toString('ascii');
     console.log(decoded);

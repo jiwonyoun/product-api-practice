@@ -2,24 +2,28 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Like, Repository } from 'typeorm';
 import {
-  CreateProductDto,
+  CreateProductInput,
   CreateProductOutput,
 } from './dto/create-product.dto';
+import {
+  DeleteProductInput,
+  DeleteProductOutput,
+} from './dto/delete-product.dto';
 import {
   CategoriesOutput,
   ProductOutput,
   ProductsOutput,
 } from './dto/output.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
-import { Categories } from './entities/categories.entity';
+import { Category } from './entities/categories.entity';
 import { Product } from './entities/products.entity';
 
 @Injectable()
 export class ProductService {
   constructor(
     @InjectRepository(Product) private readonly products: Repository<Product>,
-    @InjectRepository(Categories)
-    private readonly categories: Repository<Categories>,
+    @InjectRepository(Category)
+    private readonly categories: Repository<Category>,
   ) {}
 
   async getAll(page = 1, pageSize = 15): Promise<ProductsOutput> {
@@ -108,7 +112,7 @@ export class ProductService {
   }
 
   async create(
-    createProductInput: CreateProductDto,
+    createProductInput: CreateProductInput,
   ): Promise<CreateProductOutput> {
     try {
       const product = this.products.create(createProductInput);
@@ -116,13 +120,11 @@ export class ProductService {
         const arr = await this.inputCategory(createProductInput.categoryIds);
         product.categories = arr;
       }
-
       await this.products.save(product);
       return {
         ok: true,
       };
     } catch (e) {
-      console.log('error');
       return {
         ok: false,
         error: 'Could not create product',
@@ -130,14 +132,15 @@ export class ProductService {
     }
   }
 
-  async inputCategory(categoryId: number[]): Promise<Categories[]> {
+  async inputCategory(categoryId: number[]): Promise<Category[]> {
     try {
       const categories = [];
       for (const data of categoryId) {
         const category = await this.categories.findOne(data);
-        console.log('length : ' + categoryId.length);
+        if (!category) {
+          console.log(`category number ${categoryId} is not found`);
+        }
         categories.push(category);
-        console.log(category.categoryName);
       }
       return categories;
     } catch (e) {
@@ -145,11 +148,24 @@ export class ProductService {
     }
   }
 
-  async deleteOne(id: number): Promise<void> {
+  async deleteOne(id: DeleteProductInput): Promise<DeleteProductOutput> {
     try {
+      const product = await this.products.findOne(id);
+      if (!product) {
+        return {
+          ok: false,
+          error: 'Product not found',
+        };
+      }
       await this.products.delete(id);
-    } catch (e) {
-      console.log('error');
+      return {
+        ok: true,
+      };
+    } catch (error) {
+      return {
+        ok: false,
+        error: 'Could not delete product',
+      };
     }
   }
 

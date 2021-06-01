@@ -1,12 +1,11 @@
 import { Field, ObjectType } from '@nestjs/graphql';
-import { Entity } from 'typeorm';
+import { Column, Entity } from 'typeorm';
 
-@Entity()
 @ObjectType()
 export class CoreOutput {
   @Field(() => Boolean)
   ok: boolean;
 
-  @Field(() => String)
+  @Field(() => String, { nullable: true })
   error?: string;
 }

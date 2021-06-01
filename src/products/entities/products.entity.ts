@@ -1,4 +1,5 @@
 import { Field, HideField, InputType, ObjectType } from '@nestjs/graphql';
+import { ApiProperty } from '@nestjs/swagger';
 import { IsArray, IsNumber, IsString } from 'class-validator';
 import { type } from 'os';
 import {
@@ -8,38 +9,44 @@ import {
   ManyToMany,
   PrimaryGeneratedColumn,
 } from 'typeorm';
-import { Categories } from './categories.entity';
+import { Category } from './categories.entity';
 
 @InputType('ProductInputType', { isAbstract: true })
 @ObjectType()
 @Entity()
 export class Product {
   @PrimaryGeneratedColumn()
-  @IsNumber()
+  @ApiProperty()
   id: number;
 
   @Column()
   @IsString()
   @Field()
+  @ApiProperty()
   name: string;
 
   @Column()
   @IsNumber()
   @Field()
+  @ApiProperty()
   price: number;
 
   @Column()
   @IsString()
   @Field()
+  @ApiProperty()
   image: string;
 
   @Column()
   @IsString()
   @Field()
+  @ApiProperty()
   web: string;
 
-  @Field((type) => [Categories], { nullable: true })
-  @ManyToMany((type) => Categories, (categories) => categories.products, { nullable: true })
+  @Field((type) => [Category], { nullable: true })
+  @ManyToMany((type) => Category, (category) => category.products, {
+    nullable: true,
+  })
   @JoinTable()
-  categories?: Categories[];
+  categories?: Category[];
 }

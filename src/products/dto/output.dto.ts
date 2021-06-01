@@ -2,7 +2,7 @@ import { Field, ObjectType } from '@nestjs/graphql';
 import { type } from 'os';
 import { CoreOutput } from 'src/common/dto/output.dto';
 import { Entity } from 'typeorm';
-import { Categories } from '../entities/categories.entity';
+import { Category } from '../entities/categories.entity';
 import { Product } from '../entities/products.entity';
 
 @ObjectType()
@@ -21,6 +21,12 @@ export class ProductOutput extends CoreOutput {
 
 @ObjectType()
 export class CategoriesOutput extends CoreOutput {
-  @Field((type) => [Categories])
-  data?: Categories[];
+  @Field((type) => [Category])
+  data?: Category[];
+}
+
+@ObjectType()
+export class CategoryOutput extends CoreOutput {
+  @Field(() => Category)
+  data?: Category;
 }

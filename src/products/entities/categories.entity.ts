@@ -6,7 +6,7 @@ import { Product } from './products.entity';
 @InputType('CategoryInputType', { isAbstract: true })
 @ObjectType()
 @Entity()
-export class Categories {
+export class Category {
   @PrimaryGeneratedColumn()
   @IsNumber()
   id: number;

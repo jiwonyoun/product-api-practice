@@ -4,7 +4,7 @@ import { Product } from './products/entities/products.entity';
 import { ProductsModule } from './products/products.module';
 import { CommonModule } from './common/common.module';
 import { LoggerMiddleware } from './middleware/logger.middleware';
-import { Categories } from './products/entities/categories.entity';
+import { Category } from './products/entities/categories.entity';
 import { GraphQLModule } from '@nestjs/graphql';
 import { UsersModule } from './users/users.module';
 import { AuthService } from './auth/auth.service';
@@ -24,7 +24,7 @@ import { ConfigModule } from '@nestjs/config';
       username: process.env.POSTGRES_USER,
       password: process.env.POSTGRES_PASS,
       database: process.env.POSTGRES_DATABASE,
-      entities: [Product, Categories],
+      entities: [Product, Category],
       synchronize: true,
       // logging: true,
     }),

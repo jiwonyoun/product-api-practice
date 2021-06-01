@@ -17,7 +17,8 @@ import {
   ApiTags,
 } from '@nestjs/swagger';
 import { AuthGuard } from 'src/auth/auth.guard';
-import { CreateProductDto } from './dto/create-product.dto';
+import { CreateProductInput } from './dto/create-product.dto';
+import { DeleteProductInput } from './dto/delete-product.dto';
 import { getProductsDto } from './dto/getProducts.dto';
 import {
   CategoriesOutput,
@@ -25,7 +26,8 @@ import {
   ProductsOutput,
 } from './dto/output.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
-import { Categories } from './entities/categories.entity';
+import { Category } from './entities/categories.entity';
+import { Product } from './entities/products.entity';
 import { ProductService } from './products.service';
 
 @ApiBasicAuth()
@@ -89,21 +91,21 @@ export class ProductController {
 
   @Post()
   @ApiBody({
-    type: CreateProductDto,
+    type: CreateProductInput,
   })
   @ApiTags('상품 데이터 생성하기')
-  create(@Body() productData: CreateProductDto) {
-    return this.productService.create(productData);
+  create(@Body() createProductInput: CreateProductInput) {
+    return this.productService.create(createProductInput);
   }
 
-  @ApiParam({
+  @ApiQuery({
     name: 'id',
-    description: '삭제할 product의 ID값 입력',
+    type: DeleteProductInput,
   })
-  @Delete('/:id')
+  @Delete()
   @ApiTags('상품 데이터 삭제하기')
-  remove(@Param('id') productId: number) {
-    return this.productService.deleteOne(productId);
+  remove(@Query('id') DeleteProductInput: DeleteProductInput) {
+    return this.productService.deleteOne(DeleteProductInput);
   }
 
   @ApiParam({
@@ -118,7 +120,7 @@ export class ProductController {
   patch(
     @Param('id') productId: number,
     @Body() updateData: UpdateProductDto,
-    categories: Categories[],
+    categories: Category[],
   ) {
     return this.productService.update(productId, updateData);
   }

@@ -1,8 +1,9 @@
 import { Resolver, Query, Args, Mutation } from '@nestjs/graphql';
 import {
-  CreateProductDto,
+  CreateProductInput,
   CreateProductOutput,
 } from './dto/create-product.dto';
+import { DeleteProductInput } from './dto/delete-product.dto';
 import {
   CategoriesOutput,
   ProductOutput,
@@ -58,22 +59,22 @@ export class ProductResolver {
 
   @Mutation((type) => CreateProductOutput)
   product_create(
-    @Args('input') createProductDto: CreateProductDto,
+    @Args('input') createProductDto: CreateProductInput,
   ): Promise<CreateProductOutput> {
     return this.productService.create(createProductDto);
   }
 
-  @Mutation((type) => Boolean)
-  async product_delete(@Args('id') id: number) {
-    try {
-      await this.productService.deleteOne(id);
-      console.log('삭제 완료');
-      return true;
-    } catch (e) {
-      console.log(e);
-      return false;
-    }
-  }
+  // @Mutation((type) => Boolean)
+  // async product_delete(@Args('id') id: DeleteProductInput) {
+  //   try {
+  //     await this.productService.deleteOne(id);
+  //     console.log('삭제 완료');
+  //     return true;
+  //   } catch (e) {
+  //     console.log(e);
+  //     return false;
+  //   }
+  // }
 
   @Mutation((type) => Boolean)
   async product_update(
