@@ -30,6 +30,7 @@ export class ProductService {
     private readonly categories: Repository<Category>,
   ) {}
 
+  // default page & size
   async getAll(page = 1, pageSize = 15): Promise<ProductsOutput> {
     try {
       let hasNext = true;
@@ -38,7 +39,7 @@ export class ProductService {
         hasNext = false;
       }
 
-      if (page === 0 && pageSize === 0) {
+      if (!page && !pageSize) {
         return {
           ok: true,
           data: await this.products.find({
@@ -159,16 +160,18 @@ export class ProductService {
     }
   }
 
-  async deleteOne(id: DeleteProductInput): Promise<DeleteProductOutput> {
+  async deleteOne(
+    deleteProductInput: DeleteProductInput,
+  ): Promise<DeleteProductOutput> {
     try {
-      const product = await this.products.findOne(id);
+      const product = await this.products.findOne(deleteProductInput);
       if (!product) {
         return {
           ok: false,
           error: 'Product not found',
         };
       }
-      await this.products.delete(id);
+      await this.products.delete(deleteProductInput);
       return {
         ok: true,
       };
