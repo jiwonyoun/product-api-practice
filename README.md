@@ -13,14 +13,20 @@
 $ npm install
 
 ```
-`touch .env.dev` 
 
-  
+## Environment Variables
+`touch .env.dev` 
+```
+POSTGRES_HOST
+POSTGRES_PORT
+POSTGRES_USER
+POSTGRES_PASS
+POSTGRES_DATABASE
+```
 
 ## Running the app
 
 ```bash
-
 # development
 $ npm run start
 
@@ -31,5 +37,4 @@ $ npm run start:dev
  
 # production mode
 $ npm run start:prod
-
 ```
