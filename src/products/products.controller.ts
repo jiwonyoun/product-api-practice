@@ -19,7 +19,7 @@ import {
 import { AuthGuard } from 'src/auth/auth.guard';
 import { CreateProductInput } from './dto/create-product.dto';
 import { DeleteProductInput } from './dto/delete-product.dto';
-import { getProductsDto } from './dto/getProducts.dto';
+import { PaginationOutput } from './dto/pagination.dto';
 import {
   CategoriesOutput,
   ProductOutput,
@@ -36,13 +36,11 @@ export class ProductController {
 
   @ApiQuery({
     name: 'page',
-    enumName: 'page',
     required: false,
     description: '페이지 시작 번호 입력 (미입력 시 전체 조회)',
   })
   @ApiQuery({
     name: 'pageSize',
-    enumName: 'pageSize',
     required: false,
     description: '페이지 당 출력 갯수 입력',
   })
@@ -50,7 +48,7 @@ export class ProductController {
   // @Roles(Role.Admin)
   @UseGuards(AuthGuard)
   @Get()
-  getAll(@Query() query: getProductsDto): Promise<ProductsOutput> {
+  getAll(@Query() query: PaginationOutput): Promise<ProductsOutput> {
     return this.productService.getAll(
       Number(query.page),
       Number(query.pageSize),

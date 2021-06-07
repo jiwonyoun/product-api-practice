@@ -1,5 +1,5 @@
-import { Field, HideField, InputType, ObjectType } from '@nestjs/graphql';
-import { IsArray, IsNumber, IsOptional, IsString } from 'class-validator';
+import { Field, InputType, ObjectType } from '@nestjs/graphql';
+import { IsNumber, IsOptional, IsString } from 'class-validator';
 import { Column, Entity, ManyToMany, PrimaryGeneratedColumn } from 'typeorm';
 import { Product } from './products.entity';
 
