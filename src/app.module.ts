@@ -6,12 +6,22 @@ import { LoggerMiddleware } from './middleware/logger.middleware';
 import { Category } from './products/entities/categories.entity';
 import { GraphQLModule } from '@nestjs/graphql';
 import { ConfigModule } from '@nestjs/config';
+import * as Joi from 'joi';
 
 @Module({
   imports: [
     ConfigModule.forRoot({
-      envFilePath: '.env.dev',
+      envFilePath: process.env.ENV === 'dev' ? '.env.dev' : 'env.prod',
       isGlobal: true,
+      ignoreEnvFile: process.env.ENV === 'prod',
+      validationSchema: Joi.object({
+        ENV: Joi.string().valid('dev', 'prod'),
+        POSTGRES_HOST: Joi.string().required(),
+        POSTGRES_PORT: Joi.string().required(),
+        POSTGRES_USER: Joi.string().required(),
+        POSTGRES_PASS: Joi.string().required(),
+        POSTGRES_DATABASE: Joi.string().required(),
+      }),
     }),
     TypeOrmModule.forRoot({
       type: 'postgres',
