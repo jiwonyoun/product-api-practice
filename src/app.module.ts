@@ -7,6 +7,7 @@ import { Category } from './products/entities/categories.entity';
 import { GraphQLModule } from '@nestjs/graphql';
 import { ConfigModule } from '@nestjs/config';
 import * as Joi from 'joi';
+import { User } from './users/entities/users.entity';
 
 @Module({
   imports: [
@@ -30,7 +31,7 @@ import * as Joi from 'joi';
       username: process.env.POSTGRES_USER,
       password: process.env.POSTGRES_PASS,
       database: process.env.POSTGRES_DATABASE,
-      entities: [Product, Category],
+      entities: [Product, Category, User],
       synchronize: true,
       // logging: true,
     }),
