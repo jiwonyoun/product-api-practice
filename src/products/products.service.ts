@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { CoreOutput } from 'src/common/dto/output.dto';
-import { Like, Repository } from 'typeorm';
+import { createConnection, Like, Repository } from 'typeorm';
 import {
   CreateProductInput,
   CreateProductOutput,
@@ -15,6 +15,7 @@ import {
   ProductOutput,
   ProductsOutput,
 } from './dto/output.dto';
+import { SearchProductsInput } from './dto/search-products.dto';
 import {
   UpdateProductInput,
   UpdateProductOutput,
@@ -29,6 +30,8 @@ export class ProductService {
     @InjectRepository(Category)
     private readonly categories: Repository<Category>,
   ) {}
+
+  cursor = '';
 
   // default page & size
   async getAll(page = 1, pageSize = 15): Promise<ProductsOutput> {
@@ -62,6 +65,36 @@ export class ProductService {
       return {
         ok: false,
         error: e,
+      };
+    }
+  }
+
+  async searchProducts({ name, price, take = 5, cursor }: SearchProductsInput) {
+    try {
+      let result;
+      if (!cursor) {
+        result = await this.products.query(
+          `SELECT id, name, price, ` +
+            `CONCAT(LPAD(price, 10, '0'), LPAD(id, 10, '0')) as 'cursor' ` +
+            `FROM product ` +
+            `ORDER BY price DESC, id ASC LIMIT ${take};`,
+        );
+      } else {
+        result = await this.products.query(
+          `SELECT id, name, price, ` +
+            `CONCAT(LPAD(price, 10, '0'), LPAD(id, 10, '0')) as 'cursor' ` +
+            `FROM product ` +
+            `WHERE cursor < ${cursor} ` +
+            `ORDER BY price DESC, id ASC LIMIT ${take};`,
+        );
+      }
+      cursor = result[result.length - 1].cursor;
+      console.log(result);
+    } catch (error) {
+      console.log(error);
+      return {
+        ok: false,
+        error: 'Could not search products',
       };
     }
   }

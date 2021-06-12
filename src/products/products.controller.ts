@@ -27,6 +27,7 @@ import {
 } from './dto/output.dto';
 import { UpdateProductInput } from './dto/update-product.dto';
 import { ProductService } from './products.service';
+import { SearchProductsInput } from './dto/search-products.dto';
 
 @ApiBasicAuth()
 // @UseGuards(RolesGuard)
@@ -53,6 +54,16 @@ export class ProductController {
       Number(query.page),
       Number(query.pageSize),
     );
+  }
+
+  @Get('/search')
+  @ApiQuery({
+    type: SearchProductsInput,
+    name: 'input',
+    description: '커서를 이용한 페이지네이션',
+  })
+  searchProducts(@Query() searchProductsInput: SearchProductsInput) {
+    return this.productService.searchProducts(searchProductsInput);
   }
 
   @ApiParam({
