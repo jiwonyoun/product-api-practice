@@ -72,6 +72,7 @@ export class ProductService {
   async searchProducts({ name, price, take = 5, cursor }: SearchProductsInput) {
     try {
       let result;
+      if (!cursor) cursor = this.cursor;
       if (!cursor) {
         result = await this.products.query(
           `SELECT id, name, price, ` +
@@ -88,8 +89,10 @@ export class ProductService {
             `ORDER BY price DESC, id ASC LIMIT ${take};`,
         );
       }
-      cursor = result[result.length - 1].cursor;
+      this.cursor = result[result.length - 1].cursor;
+
       console.log(result);
+      console.log(cursor);
     } catch (error) {
       console.log(error);
       return {
