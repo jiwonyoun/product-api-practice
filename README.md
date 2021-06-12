@@ -2,7 +2,7 @@
 
 ## Description
 
-####  Product CRUD Rest API 🎁
+####  Product CRUD REST API 🎁
 
   
 
