@@ -15,7 +15,7 @@ import {
   ProductOutput,
   ProductsOutput,
 } from './dto/output.dto';
-import { SearchProductsInput } from './dto/search-products.dto';
+import { PagingProductsInput } from './dto/paging-products.dto';
 import {
   UpdateProductInput,
   UpdateProductOutput,
@@ -31,7 +31,7 @@ export class ProductService {
     private readonly categories: Repository<Category>,
   ) {}
 
-  cursor = '';
+  cursor = null;
 
   // default page & size
   async getAll(page = 1, pageSize = 15): Promise<ProductsOutput> {
@@ -69,30 +69,30 @@ export class ProductService {
     }
   }
 
-  async searchProducts({ name, price, take = 5, cursor }: SearchProductsInput) {
+  async pagingProducts({ take = 5, cursor }: PagingProductsInput) {
     try {
       let result;
-      if (!cursor) cursor = this.cursor;
+      cursor = this.cursor;
       if (!cursor) {
         result = await this.products.query(
           `SELECT id, name, price, ` +
-            `CONCAT(LPAD(price, 10, '0'), LPAD(id, 10, '0')) as 'cursor' ` +
+            `CONCAT(LPAD(POW(10, 10)-price, 10, '0'), LPAD(POW(10, 10)-id, 10, '0')) as 'cursor' ` +
             `FROM product ` +
-            `ORDER BY price DESC, id ASC LIMIT ${take};`,
+            `ORDER BY price ASC, id ASC LIMIT ${take};`,
         );
       } else {
         result = await this.products.query(
           `SELECT id, name, price, ` +
-            `CONCAT(LPAD(price, 10, '0'), LPAD(id, 10, '0')) as 'cursor' ` +
+            `CONCAT(LPAD(POW(10, 10)-price, 10, '0'), LPAD(POW(10, 10)-id, 10, '0')) as 'cursor' ` +
             `FROM product ` +
-            `WHERE cursor < ${cursor} ` +
-            `ORDER BY price DESC, id ASC LIMIT ${take};`,
+            `WHERE CONCAT(LPAD(POW(10, 10)-price, 10, '0'), LPAD(POW(10, 10)-id, 10, '0')) < ${cursor} ` +
+            `ORDER BY price ASC, id ASC LIMIT ${take};`,
         );
       }
       this.cursor = result[result.length - 1].cursor;
 
       console.log(result);
-      console.log(cursor);
+      console.log(this.cursor);
     } catch (error) {
       console.log(error);
       return {

@@ -27,7 +27,7 @@ import {
 } from './dto/output.dto';
 import { UpdateProductInput } from './dto/update-product.dto';
 import { ProductService } from './products.service';
-import { SearchProductsInput } from './dto/search-products.dto';
+import { PagingProductsInput } from './dto/paging-products.dto';
 
 @ApiBasicAuth()
 // @UseGuards(RolesGuard)
@@ -56,14 +56,10 @@ export class ProductController {
     );
   }
 
-  @Get('/search')
-  @ApiQuery({
-    type: SearchProductsInput,
-    name: 'input',
-    description: '커서를 이용한 페이지네이션',
-  })
-  searchProducts(@Query() searchProductsInput: SearchProductsInput) {
-    return this.productService.searchProducts(searchProductsInput);
+  @ApiTags('상품 데이터 가져오기')
+  @Get('/paging')
+  searchProducts(@Query() searchProductsInput: PagingProductsInput) {
+    return this.productService.pagingProducts(searchProductsInput);
   }
 
   @ApiParam({
