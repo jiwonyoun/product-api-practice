@@ -29,7 +29,11 @@ import { Product } from './entities/products.entity';
 import {
   firstPaginationQuery,
   nextPaginationQuery,
-} from './queries/cursor-based.query';
+} from '../common/queries/cursor-based.query';
+import {
+  createCursorPaginationData,
+  DEFAULT_PAGE_TAKE,
+} from '../common/cursor-based.pagination';
 
 @Injectable()
 export class ProductService {
@@ -77,25 +81,22 @@ export class ProductService {
 
   async pagingProducts({
     sortColumn,
-    take = 5,
+    take = DEFAULT_PAGE_TAKE,
     cursor,
-    sorting = SortingType.DESC,
+    sorting = SortingType.ASC,
   }: PagingProductsInput): Promise<PagingProductsOutput> {
     try {
-      let result;
-      if (!cursor) {
-        result = await this.products.query(
-          firstPaginationQuery(sortColumn, take, sorting),
-        );
-      } else {
-        result = await this.products.query(
-          nextPaginationQuery(sortColumn, take, cursor, sorting),
-        );
-      }
+      const result = await createCursorPaginationData(
+        this.products,
+        sortColumn,
+        take,
+        cursor,
+        sorting,
+      );
       if (!result.length) {
         return {
           ok: false,
-          error: 'no more data',
+          error: 'No more data',
         };
       }
       return {
