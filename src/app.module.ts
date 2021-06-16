@@ -8,6 +8,7 @@ import { GraphQLModule } from '@nestjs/graphql';
 import { ConfigModule } from '@nestjs/config';
 import * as Joi from 'joi';
 import { User } from './users/entities/users.entity';
+import { SwaggerModule } from '@nestjs/swagger';
 
 @Module({
   imports: [

@@ -2,7 +2,7 @@ import { ObjectType } from '@nestjs/graphql';
 import { IsOptional, IsString } from 'class-validator';
 
 @ObjectType()
-export class PaginationOutput {
+export class PaginationInput {
   @IsString()
   @IsOptional()
   page?: string;

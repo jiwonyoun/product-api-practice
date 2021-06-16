@@ -13,13 +13,14 @@ import {
   ApiBasicAuth,
   ApiBody,
   ApiParam,
+  ApiProperty,
   ApiQuery,
   ApiTags,
 } from '@nestjs/swagger';
 import { AuthGuard } from 'src/auth/auth.guard';
 import { CreateProductInput } from './dto/create-product.dto';
 import { DeleteProductInput } from './dto/delete-product.dto';
-import { PaginationOutput } from './dto/pagination.dto';
+import { PaginationInput } from './dto/pagination.dto';
 import {
   CategoriesOutput,
   ProductOutput,
@@ -27,7 +28,11 @@ import {
 } from './dto/output.dto';
 import { UpdateProductInput } from './dto/update-product.dto';
 import { ProductService } from './products.service';
-import { PagingProductsInput } from './dto/paging-products.dto';
+import {
+  PagingProductsInput,
+  PagingProductsOutput,
+} from './dto/paging-products.dto';
+import { Product } from './entities/products.entity';
 
 @ApiBasicAuth()
 // @UseGuards(RolesGuard)
@@ -49,7 +54,7 @@ export class ProductController {
   // @Roles(Role.Admin)
   @UseGuards(AuthGuard)
   @Get()
-  getAll(@Query() query: PaginationOutput): Promise<ProductsOutput> {
+  getAll(@Query() query: PaginationInput): Promise<ProductsOutput> {
     return this.productService.getAll(
       Number(query.page),
       Number(query.pageSize),
@@ -58,8 +63,10 @@ export class ProductController {
 
   @ApiTags('상품 데이터 가져오기')
   @Get('/paging')
-  searchProducts(@Query() searchProductsInput: PagingProductsInput) {
-    return this.productService.pagingProducts(searchProductsInput);
+  searchProducts(
+    @Query() pagingProductsInput: PagingProductsInput,
+  ): Promise<PagingProductsOutput> {
+    return this.productService.pagingProducts(pagingProductsInput);
   }
 
   @ApiParam({

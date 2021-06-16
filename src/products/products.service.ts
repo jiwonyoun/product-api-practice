@@ -15,13 +15,21 @@ import {
   ProductOutput,
   ProductsOutput,
 } from './dto/output.dto';
-import { PagingProductsInput } from './dto/paging-products.dto';
+import {
+  PagingProductsInput,
+  PagingProductsOutput,
+  SortingType,
+} from './dto/paging-products.dto';
 import {
   UpdateProductInput,
   UpdateProductOutput,
 } from './dto/update-product.dto';
 import { Category } from './entities/categories.entity';
 import { Product } from './entities/products.entity';
+import {
+  firstPaginationQuery,
+  nextPaginationQuery,
+} from './queries/cursor-based.query';
 
 @Injectable()
 export class ProductService {
@@ -30,8 +38,6 @@ export class ProductService {
     @InjectRepository(Category)
     private readonly categories: Repository<Category>,
   ) {}
-
-  cursor = null;
 
   // default page & size
   async getAll(page = 1, pageSize = 15): Promise<ProductsOutput> {
@@ -69,30 +75,34 @@ export class ProductService {
     }
   }
 
-  async pagingProducts({ take = 5, cursor }: PagingProductsInput) {
+  async pagingProducts({
+    sortColumn,
+    take = 5,
+    cursor,
+    sorting = SortingType.DESC,
+  }: PagingProductsInput): Promise<PagingProductsOutput> {
     try {
       let result;
-      cursor = this.cursor;
       if (!cursor) {
         result = await this.products.query(
-          `SELECT id, name, price, ` +
-            `CONCAT(LPAD(POW(10, 10)-price, 10, '0'), LPAD(POW(10, 10)-id, 10, '0')) as 'cursor' ` +
-            `FROM product ` +
-            `ORDER BY price ASC, id ASC LIMIT ${take};`,
+          firstPaginationQuery(sortColumn, take, sorting),
         );
       } else {
         result = await this.products.query(
-          `SELECT id, name, price, ` +
-            `CONCAT(LPAD(POW(10, 10)-price, 10, '0'), LPAD(POW(10, 10)-id, 10, '0')) as 'cursor' ` +
-            `FROM product ` +
-            `WHERE CONCAT(LPAD(POW(10, 10)-price, 10, '0'), LPAD(POW(10, 10)-id, 10, '0')) < ${cursor} ` +
-            `ORDER BY price ASC, id ASC LIMIT ${take};`,
+          nextPaginationQuery(sortColumn, take, cursor, sorting),
         );
       }
-      this.cursor = result[result.length - 1].cursor;
-
-      console.log(result);
-      console.log(this.cursor);
+      if (!result.length) {
+        return {
+          ok: false,
+          error: 'no more data',
+        };
+      }
+      return {
+        ok: true,
+        data: result,
+        cursor: result[result.length - 1].cursor,
+      };
     } catch (error) {
       console.log(error);
       return {
