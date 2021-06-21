@@ -63,7 +63,7 @@ export class ProductController {
 
   @ApiTags('상품 데이터 가져오기')
   @Get('/paging')
-  searchProducts(
+  pagingProducts(
     @Query() pagingProductsInput: PagingProductsInput,
   ): Promise<PagingProductsOutput> {
     return this.productService.pagingProducts(pagingProductsInput);
