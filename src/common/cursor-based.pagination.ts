@@ -1,17 +1,21 @@
 import {
+  PagingDirection,
   SortingType,
   SortProductColumn,
 } from 'src/products/dto/paging-products.dto';
 import {
   firstPaginationQuery,
   nextPaginationQuery,
+  prevPaginationQuery,
 } from 'src/common/queries/cursor-based.query';
 import { Repository } from 'typeorm';
+import { Product } from 'src/products/entities/products.entity';
 
 export const DEFAULT_PAGE_TAKE = 5;
 
 export const createCursorPaginationData = async (
   entity: Repository<any>,
+  direction: PagingDirection,
   column: string,
   take: number,
   cursor: number,
@@ -23,9 +27,15 @@ export const createCursorPaginationData = async (
         firstPaginationQuery(entity, column, take, sorting),
       );
     } else {
-      return await entity.query(
-        nextPaginationQuery(entity, column, take, cursor, sorting),
-      );
+      if (direction === PagingDirection.NEXT) {
+        return await entity.query(
+          nextPaginationQuery(entity, column, take, cursor, sorting),
+        );
+      } else {
+        return await entity.query(
+          prevPaginationQuery(entity, column, take, cursor, sorting),
+        );
+      }
     }
   } catch (e) {
     console.log(e);

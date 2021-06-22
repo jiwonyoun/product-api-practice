@@ -16,6 +16,7 @@ import {
   ProductsOutput,
 } from './dto/output.dto';
 import {
+  PagingDirection,
   PagingProductsInput,
   PagingProductsOutput,
   SortingType,
@@ -80,6 +81,7 @@ export class ProductService {
   }
 
   async pagingProducts({
+    direction = PagingDirection.NEXT,
     sortColumn,
     take = DEFAULT_PAGE_TAKE,
     cursor,
@@ -88,11 +90,13 @@ export class ProductService {
     try {
       const result = await createCursorPaginationData(
         this.products,
+        direction,
         sortColumn,
         take,
         cursor,
         sorting,
       );
+
       if (!result.length) {
         return {
           ok: false,
@@ -102,7 +106,8 @@ export class ProductService {
       return {
         ok: true,
         data: result,
-        cursor: result[result.length - 1].cursor,
+        prevCursor: result[0].cursor,
+        nextCursor: result[result.length - 1].cursor,
       };
     } catch (error) {
       console.log(error);

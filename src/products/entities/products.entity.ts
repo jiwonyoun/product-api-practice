@@ -19,7 +19,7 @@ export class Product {
   @ApiProperty()
   id: number;
 
-  @Column()
+  @Column({ charset: 'euckr' }) // 한글 정렬 필요 옵션
   @IsString()
   @Field()
   @ApiProperty()

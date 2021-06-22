@@ -14,7 +14,7 @@ async function bootstrap() {
   );
   const config = new DocumentBuilder()
     .setTitle('API example')
-    .setDescription('Hotping clone products API')
+    .setDescription('products REST-API 🎁')
     .setVersion('1.0')
     .addTag('Products')
     .addBasicAuth()

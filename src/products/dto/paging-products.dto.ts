@@ -1,3 +1,4 @@
+import { registerEnumType } from '@nestjs/graphql';
 import { ApiProperty } from '@nestjs/swagger';
 import {
   IsEnum,
@@ -20,7 +21,18 @@ export enum SortProductColumn {
   PRICE = 'price',
 }
 
+export enum PagingDirection {
+  NEXT = 'NEXT',
+  PREV = 'PREV',
+}
+
 export class PagingProductsInput {
+  @IsEnum(PagingDirection)
+  @ApiProperty({
+    description: 'Page Next or Prev',
+  })
+  direction: PagingDirection;
+
   @IsEnum(SortProductColumn)
   @ApiProperty({
     enum: SortProductColumn,
@@ -46,5 +58,6 @@ export class PagingProductsOutput extends CoreOutput {
   data?: Product[];
 
   // cursor of the last data
-  cursor?: number;
+  prevCursor?: number;
+  nextCursor?: number;
 }
