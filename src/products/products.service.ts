@@ -35,6 +35,7 @@ import {
   createCursorPaginationData,
   DEFAULT_PAGE_TAKE,
 } from '../common/cursor-based.pagination';
+import { RelationIdLoader } from 'typeorm/query-builder/RelationIdLoader';
 
 @Injectable()
 export class ProductService {

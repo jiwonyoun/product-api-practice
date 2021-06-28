@@ -5,11 +5,14 @@ import { type } from 'os';
 import {
   Column,
   Entity,
+  JoinColumn,
   JoinTable,
   ManyToMany,
   PrimaryGeneratedColumn,
   RelationId,
 } from 'typeorm';
+import { RelationIdAttribute } from 'typeorm/query-builder/relation-id/RelationIdAttribute';
+import { RelationIdLoader } from 'typeorm/query-builder/RelationIdLoader';
 import { Category } from './categories.entity';
 
 @InputType('ProductInputType', { isAbstract: true })
@@ -44,8 +47,8 @@ export class Product {
   @ApiProperty()
   web: string;
 
-  @Field((type) => [Category], { nullable: true })
-  @ManyToMany((type) => Category, (category) => category.products, {
+  @Field(() => [Category], { nullable: true })
+  @ManyToMany(() => Category, (category) => category.products, {
     nullable: true,
   })
   @JoinTable()

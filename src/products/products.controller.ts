@@ -32,7 +32,6 @@ import {
   PagingProductsInput,
   PagingProductsOutput,
 } from './dto/paging-products.dto';
-import { Product } from './entities/products.entity';
 
 @ApiBasicAuth()
 // @UseGuards(RolesGuard)

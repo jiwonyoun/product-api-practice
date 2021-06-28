@@ -22,7 +22,7 @@ export enum SortProductColumn {
 }
 
 export enum ProductJoinTable {
-  CATEGORY = 'category',
+  CATEGORY = 'product_categories_category',
 }
 
 export enum PagingDirection {
