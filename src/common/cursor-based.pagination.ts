@@ -17,6 +17,7 @@ export const createCursorPaginationData = async (
   entity: Repository<any>,
   direction: PagingDirection,
   column: string,
+  joinTable: string,
   take: number,
   cursor: number,
   sorting: SortingType,
@@ -24,16 +25,16 @@ export const createCursorPaginationData = async (
   try {
     if (!cursor) {
       return await entity.query(
-        firstPaginationQuery(entity, column, take, sorting),
+        firstPaginationQuery(entity, column, joinTable, take, sorting),
       );
     } else {
       if (direction === PagingDirection.NEXT) {
         return await entity.query(
-          nextPaginationQuery(entity, column, take, cursor, sorting),
+          nextPaginationQuery(entity, column, joinTable, take, cursor, sorting),
         );
       } else {
         return await entity.query(
-          prevPaginationQuery(entity, column, take, cursor, sorting),
+          prevPaginationQuery(entity, column, joinTable, take, cursor, sorting),
         );
       }
     }

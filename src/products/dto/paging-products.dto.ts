@@ -21,6 +21,10 @@ export enum SortProductColumn {
   PRICE = 'price',
 }
 
+export enum ProductJoinTable {
+  CATEGORY = 'category',
+}
+
 export enum PagingDirection {
   NEXT = 'NEXT',
   PREV = 'PREV',
@@ -39,6 +43,14 @@ export class PagingProductsInput {
     description: '정렬할 기준 선택',
   })
   sortColumn: SortProductColumn;
+
+  @IsOptional()
+  @ApiProperty({
+    enum: ProductJoinTable,
+    description: '릴레이션 테이블 조회, 빈값 입력 시 Product만 출력',
+    nullable: true,
+  })
+  joinTable?: ProductJoinTable;
 
   @IsOptional()
   take?: number;

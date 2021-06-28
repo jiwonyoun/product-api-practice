@@ -18,7 +18,7 @@ export class Category {
   categoryName?: string;
 
   @Field((type) => [Product], { nullable: true })
-  @ManyToMany((Type) => Product, (product) => product.categories, {
+  @ManyToMany((type) => Product, (product) => product.categories, {
     onDelete: 'NO ACTION',
     nullable: true,
   })

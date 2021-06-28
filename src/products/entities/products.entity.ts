@@ -8,6 +8,7 @@ import {
   JoinTable,
   ManyToMany,
   PrimaryGeneratedColumn,
+  RelationId,
 } from 'typeorm';
 import { Category } from './categories.entity';
 

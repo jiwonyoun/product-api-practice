@@ -83,6 +83,7 @@ export class ProductService {
   async pagingProducts({
     direction = PagingDirection.NEXT,
     sortColumn,
+    joinTable,
     take = DEFAULT_PAGE_TAKE,
     cursor,
     sorting = SortingType.ASC,
@@ -92,6 +93,7 @@ export class ProductService {
         this.products,
         direction,
         sortColumn,
+        joinTable,
         take,
         cursor,
         sorting,
