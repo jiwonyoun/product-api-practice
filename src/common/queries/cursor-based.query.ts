@@ -2,6 +2,7 @@ export const firstPaginationQuery = (
   entity,
   column,
   joinTable,
+  joinTableColumn,
   take,
   sorting,
 ) => {
@@ -14,7 +15,7 @@ export const firstPaginationQuery = (
     );
   }
   return (
-    `SELECT ${entity.metadata.tableName}.id, ${entity.metadata.tableName}.name, ${entity.metadata.tableName}.price, ${joinTable}.categoryId, ` +
+    `SELECT ${entity.metadata.tableName}.id, ${entity.metadata.tableName}.name, ${entity.metadata.tableName}.price, ${joinTable}.${joinTableColumn}, ` +
     `CONCAT(LPAD(POW(10, 10)-${column}, 10, '0'), LPAD(POW(10, 10)-id, 10, '0')) as 'cursor' ` +
     `FROM ${entity.metadata.tableName} ` +
     `LEFT JOIN ${joinTable} ON ${entity.metadata.tableName}.id = ${joinTable}.productId ` +
@@ -26,6 +27,7 @@ export const nextPaginationQuery = (
   entity,
   column,
   joinTable,
+  joinTableColumn,
   take,
   cursor,
   sorting,
@@ -39,7 +41,7 @@ export const nextPaginationQuery = (
       `ORDER BY ${column} ${sorting}, id ASC LIMIT ${take};`;
   }
   return (
-    `SELECT ${entity.metadata.tableName}.id, ${entity.metadata.tableName}.name, ${entity.metadata.tableName}.price, ${joinTable}.categoryId, ` +
+    `SELECT ${entity.metadata.tableName}.id, ${entity.metadata.tableName}.name, ${entity.metadata.tableName}.price, ${joinTable}.${joinTableColumn}, ` +
     `CONCAT(LPAD(POW(10, 10)-${column}, 10, '0'), LPAD(POW(10, 10)-id, 10, '0')) as 'cursor' ` +
     `FROM ${entity.metadata.tableName} ` +
     `LEFT JOIN ${joinTable} ON ${entity.metadata.tableName}.id = ${joinTable}.productId ` +
@@ -52,6 +54,7 @@ export const prevPaginationQuery = (
   entity,
   column,
   joinTable,
+  joinTableColumn,
   take,
   cursor,
   sorting,
@@ -67,7 +70,7 @@ export const prevPaginationQuery = (
     );
   }
   return (
-    `SELECT ${entity.metadata.tableName}.id, ${entity.metadata.tableName}.name, ${entity.metadata.tableName}.price, ${joinTable}.categoryId, ` +
+    `SELECT ${entity.metadata.tableName}.id, ${entity.metadata.tableName}.name, ${entity.metadata.tableName}.price, ${joinTable}.${joinTableColumn}, ` +
     `CONCAT(LPAD(POW(10, 10)-${column}, 10, '0'), LPAD(POW(10, 10)-id, 10, '0')) as 'cursor' ` +
     `FROM ${entity.metadata.tableName} ` +
     `LEFT JOIN ${joinTable} ON ${entity.metadata.tableName}.id = ${joinTable}.productId ` +

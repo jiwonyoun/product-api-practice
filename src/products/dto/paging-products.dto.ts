@@ -25,6 +25,10 @@ export enum ProductJoinTable {
   CATEGORY = 'product_categories_category',
 }
 
+export enum ProductJoinTableColumn {
+  CATEGORY_ID = 'categoryId',
+}
+
 export enum PagingDirection {
   NEXT = 'NEXT',
   PREV = 'PREV',
@@ -51,6 +55,14 @@ export class PagingProductsInput {
     nullable: true,
   })
   joinTable?: ProductJoinTable;
+
+  @IsOptional()
+  @ApiProperty({
+    enum: ProductJoinTableColumn,
+    description: '릴레이션 테이블의 Join Column 선택',
+    nullable: true,
+  })
+  joinTableColumn?: ProductJoinTable;
 
   @IsOptional()
   take?: number;
