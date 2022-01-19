@@ -2,6 +2,7 @@ import { Test } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { CreateProductInput } from './dto/create-product.dto';
+import { DeleteProductInput } from './dto/delete-product.dto';
 import { Category } from './entities/categories.entity';
 import { Product } from './entities/products.entity';
 import { ProductController } from './products.controller';
@@ -290,6 +291,62 @@ describe('ProductService', () => {
       const result = await productService.inputCategory([1]);
 
       expect(result).toEqual([]);
+    });
+  });
+
+  describe('deleteOne', () => {
+    const findOneProduct: Product = {
+      id: 1,
+      name: '',
+      price: 1,
+      createdAt: new Date(),
+      image: '',
+      web: '',
+    };
+
+    it('should delete product', async () => {
+      productRepository.findOne.mockResolvedValue(findOneProduct);
+      productRepository.delete.mockResolvedValue('deleted');
+
+      const result = await productService.deleteOne({ id: 1 });
+
+      expect(productRepository.findOne).toHaveBeenCalledWith(
+        expect.any(Object),
+      );
+
+      expect(productRepository.delete).toHaveBeenCalled();
+      expect(productRepository.delete).toHaveBeenCalledWith(expect.any(Object));
+
+      expect(result).toEqual({
+        ok: true,
+      });
+    });
+
+    it('should fail if product not found', async () => {
+      productRepository.findOne.mockResolvedValue(undefined);
+
+      const result = await productService.deleteOne({ id: 1 });
+
+      expect(productRepository.findOne).toHaveBeenCalledWith(
+        expect.any(Object),
+      );
+
+      expect(result).toEqual({
+        ok: false,
+        error: 'Product not found',
+      });
+    });
+
+    it('should fail if occurred error', async () => {
+      productRepository.findOne.mockResolvedValue(findOneProduct);
+      productRepository.delete.mockRejectedValue(new Error());
+
+      const result = await productService.deleteOne({ id: 1 });
+
+      expect(result).toEqual({
+        ok: false,
+        error: 'Could not delete product',
+      });
     });
   });
 });
