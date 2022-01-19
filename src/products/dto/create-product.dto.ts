@@ -7,6 +7,7 @@ import { Product } from '../entities/products.entity';
 @InputType()
 export class CreateProductInput extends OmitType(Product, [
   'id',
+  'createdAt',
   'categories',
 ]) {
   @IsArray()
