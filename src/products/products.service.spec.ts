@@ -43,6 +43,9 @@ describe('ProductService', () => {
       ],
     }).compile();
 
+    // ignore 'console.log' in service logics
+    jest.spyOn(console, 'log').mockImplementation();
+
     productService = module.get<ProductService>(ProductService);
     productRepository = module.get(getRepositoryToken(Product));
     categoryRepository = module.get(getRepositoryToken(Category));
@@ -244,6 +247,49 @@ describe('ProductService', () => {
         ok: false,
         error: 'Category not found',
       });
+    });
+  });
+
+  describe('inputCategory', () => {
+    const inputCategoryResult: Category[] = [
+      {
+        id: 1,
+        categoryName: '',
+      },
+    ];
+
+    it('should return categories', async () => {
+      categoryRepository.findOne.mockResolvedValue(inputCategoryResult[0]);
+
+      const result = await productService.inputCategory([1]);
+
+      expect(categoryRepository.findOne).toHaveBeenCalledTimes(1);
+      expect(categoryRepository.findOne).toHaveBeenCalledWith(
+        expect.any(Number),
+      );
+
+      expect(result).toEqual(inputCategoryResult);
+    });
+
+    it('should return empty category array', async () => {
+      categoryRepository.findOne.mockResolvedValue(undefined);
+
+      const result = await productService.inputCategory([1]);
+
+      expect(categoryRepository.findOne).toHaveBeenCalled();
+      expect(categoryRepository.findOne).toHaveBeenCalledWith(
+        expect.any(Number),
+      );
+
+      expect(result).toEqual([]);
+    });
+
+    it('should return empty array if occurred error', async () => {
+      categoryRepository.findOne.mockRejectedValue(new Error());
+
+      const result = await productService.inputCategory([1]);
+
+      expect(result).toEqual([]);
     });
   });
 });

@@ -234,6 +234,7 @@ export class ProductService {
       return categories;
     } catch (e) {
       console.log(e);
+      return [];
     }
   }
 
