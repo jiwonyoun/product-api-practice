@@ -9,6 +9,8 @@ import { ConfigModule } from '@nestjs/config';
 import * as Joi from 'joi';
 import { User } from './users/entities/users.entity';
 import { SwaggerModule } from '@nestjs/swagger';
+import { join } from 'path';
+import * as moment from 'moment-timezone';
 
 @Module({
   imports: [
@@ -45,7 +47,12 @@ import { SwaggerModule } from '@nestjs/swagger';
       database: process.env.MYSQL_DATABASE,
       entities: [Product, Category, User],
       synchronize: true,
-      // logging: true,
+      logging: true,
+      migrations: [join(__dirname, 'migrations/*{.ts,.js}')],
+      cli: {
+        migrationsDir: 'src/migrations',
+      },
+      timezone: 'Z',
     }),
     ProductsModule,
     GraphQLModule.forRoot({
@@ -57,7 +64,6 @@ import { SwaggerModule } from '@nestjs/swagger';
 })
 export class AppModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {
-    consumer.apply(LoggerMiddleware).forRoutes('product');
     // 또는 .forRoutes({ path:'product', method: RequestMethod.GET }); - 특정 요청 method 유형을 제한
     // 또는 .forRoutes(ProductsController); - Controller class 사용 가능
   }

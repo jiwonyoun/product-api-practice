@@ -1,5 +1,6 @@
 import {
   Body,
+  ClassSerializerInterceptor,
   Controller,
   Delete,
   Get,
@@ -8,6 +9,7 @@ import {
   Post,
   Query,
   UseGuards,
+  UseInterceptors,
 } from '@nestjs/common';
 import {
   ApiBasicAuth,
@@ -32,6 +34,7 @@ import {
   PagingProductsInput,
   PagingProductsOutput,
 } from './dto/paging-products.dto';
+import * as moment from 'moment';
 
 @ApiBasicAuth()
 // @UseGuards(RolesGuard)
@@ -51,9 +54,12 @@ export class ProductController {
   })
   @ApiTags('상품 데이터 가져오기')
   // @Roles(Role.Admin)
-  @UseGuards(AuthGuard)
+  // @UseGuards(AuthGuard)
+  @UseInterceptors(ClassSerializerInterceptor)
   @Get()
   getAll(@Query() query: PaginationInput): Promise<ProductsOutput> {
+    console.log(moment(new Date()).locale('ko'));
+
     return this.productService.getAll(
       Number(query.page),
       Number(query.pageSize),

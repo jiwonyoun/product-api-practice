@@ -1,24 +1,35 @@
 import { Field, HideField, InputType, ObjectType } from '@nestjs/graphql';
-import { ApiProperty } from '@nestjs/swagger';
+import { ApiHideProperty, ApiProperty } from '@nestjs/swagger';
+import { Transform, Type } from 'class-transformer';
 import { IsArray, IsNumber, IsString } from 'class-validator';
-import { type } from 'os';
+import * as moment from 'moment-timezone';
 import {
+  AfterLoad,
   Column,
+  CreateDateColumn,
   Entity,
-  JoinColumn,
   JoinTable,
   ManyToMany,
   PrimaryGeneratedColumn,
-  RelationId,
 } from 'typeorm';
-import { RelationIdAttribute } from 'typeorm/query-builder/relation-id/RelationIdAttribute';
-import { RelationIdLoader } from 'typeorm/query-builder/RelationIdLoader';
 import { Category } from './categories.entity';
+
+export const DateTimezoneTransformer = {
+  to: (value: Date) => value.setHours(value.getHours() + 9),
+  from: (value: Date) => value,
+};
 
 @InputType('ProductInputType', { isAbstract: true })
 @ObjectType()
 @Entity()
 export class Product {
+  @Column({
+    default: () => 'now()',
+    type: 'timestamp',
+  })
+  @ApiHideProperty()
+  createdAt: Date;
+
   @PrimaryGeneratedColumn()
   @ApiProperty()
   id: number;

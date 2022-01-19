@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { CoreOutput } from 'src/common/dto/output.dto';
-import { createConnection, Like, Repository } from 'typeorm';
+import { createConnection, Like, Repository, Transaction } from 'typeorm';
 import {
   CreateProductInput,
   CreateProductOutput,
@@ -136,6 +136,26 @@ export class ProductService {
       };
     }
   }
+
+  // async getOne(id: number): Promise<ProductOutput> {
+  //   try {
+  //     const product = await this.products
+  //       .createQueryBuilder('product')
+  //       // .useTransaction(true)
+  //       .leftJoinAndSelect('product.categories', 'category')
+  //       .where('product.id = :id', { id })
+  //       .getOne();
+
+  //     return {
+  //       ok: true,
+  //       data: product,
+  //     };
+  //   } catch (e) {
+  //     {
+  //       return { ok: false, error: e };
+  //     }
+  //   }
+  // }
 
   // 특정 카테고리에 속한 products들 출력
   async getCategory(id: number): Promise<CategoriesOutput> {
