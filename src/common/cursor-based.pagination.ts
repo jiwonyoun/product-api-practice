@@ -9,7 +9,6 @@ import {
   prevPaginationQuery,
 } from 'src/common/queries/cursor-based.query';
 import { Repository } from 'typeorm';
-import { Product } from 'src/products/entities/products.entity';
 
 export const DEFAULT_PAGE_TAKE = 5;
 

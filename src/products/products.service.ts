@@ -275,7 +275,7 @@ export class ProductService {
       }
       if (updateData.categoryIds) {
         const arr = await this.inputCategory(updateData.categoryIds);
-        if (arr.length === 0) {
+        if (arr.length == 0) {
           return {
             ok: false,
             error: 'Category not found',

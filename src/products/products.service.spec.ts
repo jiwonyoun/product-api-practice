@@ -349,4 +349,62 @@ describe('ProductService', () => {
       });
     });
   });
+
+  describe('update', () => {
+    const findOneProduct: Product = {
+      id: 1,
+      name: '',
+      price: 1,
+      createdAt: new Date(),
+      image: '',
+      web: '',
+    };
+
+    const inputCategoryResult: Category[] = [
+      {
+        id: 1,
+        categoryName: '',
+      },
+    ];
+
+    it('should update product', async () => {
+      productRepository.findOne.mockResolvedValue(findOneProduct);
+      productService.inputCategory = jest.fn(async () => inputCategoryResult);
+      productRepository.save.mockResolvedValue('saved');
+
+      const result = await productService.update(1, findOneProduct);
+
+      expect(productRepository.findOne).toHaveBeenCalled();
+      expect(productRepository.findOne).toHaveBeenCalledWith(findOneProduct.id);
+
+      expect(productRepository.save).toHaveBeenCalled();
+      expect(productRepository.save).toHaveBeenCalledWith(findOneProduct);
+
+      expect(result).toEqual({
+        ok: true,
+      });
+    });
+
+    it('should fail if product not found', async () => {
+      productRepository.findOne.mockResolvedValue(undefined);
+
+      const result = await productService.update(1, findOneProduct);
+
+      expect(result).toEqual({
+        ok: false,
+        error: 'Product not found',
+      });
+    });
+
+    it('should fail if occurred error', async () => {
+      productRepository.findOne.mockRejectedValue(new Error());
+
+      const result = await productService.update(1, findOneProduct);
+
+      expect(result).toEqual({
+        ok: false,
+        error: 'Could not update product',
+      });
+    });
+  });
 });
