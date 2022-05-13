@@ -1,6 +1,5 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { CoreOutput } from 'src/common/dto/output.dto';
 import { createConnection, Like, Repository, Transaction } from 'typeorm';
 import {
   CreateProductInput,
@@ -28,14 +27,10 @@ import {
 import { Category } from './entities/categories.entity';
 import { Product } from './entities/products.entity';
 import {
-  firstPaginationQuery,
-  nextPaginationQuery,
-} from '../common/queries/cursor-based.query';
-import {
   createCursorPaginationData,
   DEFAULT_PAGE_TAKE,
 } from '../common/cursor-based.pagination';
-import { RelationIdLoader } from 'typeorm/query-builder/RelationIdLoader';
+import { HandleError } from 'src/common/decorators/handle-error.decorator';
 
 @Injectable()
 export class ProductService {

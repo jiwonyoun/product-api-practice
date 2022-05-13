@@ -10,21 +10,22 @@ import * as Joi from 'joi';
 import { User } from './users/entities/users.entity';
 import { SwaggerModule } from '@nestjs/swagger';
 import { join } from 'path';
+import { BatchModule } from './batch/batch.module';
 import * as moment from 'moment-timezone';
 
 @Module({
   imports: [
     ConfigModule.forRoot({
-      envFilePath: process.env.ENV === 'dev' ? '.env.dev' : 'env.prod',
+      envFilePath: process.env.ENV === 'dev' ? '.env' : 'env.prod',
       isGlobal: true,
       ignoreEnvFile: process.env.ENV === 'prod',
       validationSchema: Joi.object({
         ENV: Joi.string().valid('dev', 'prod'),
-        POSTGRES_HOST: Joi.string().required(),
-        POSTGRES_PORT: Joi.string().required(),
-        POSTGRES_USER: Joi.string().required(),
-        POSTGRES_PASS: Joi.string().required(),
-        POSTGRES_DATABASE: Joi.string().required(),
+        MYSQL_HOST: Joi.string().required(),
+        MYSQL_PORT: Joi.string().required(),
+        MYSQL_USER: Joi.string().required(),
+        MYSQL_PASS: Joi.string().required(),
+        MYSQL_DATABASE: Joi.string().required(),
       }),
     }),
     // TypeOrmModule.forRoot({
@@ -47,7 +48,7 @@ import * as moment from 'moment-timezone';
       database: process.env.MYSQL_DATABASE,
       entities: [Product, Category, User],
       synchronize: true,
-      logging: true,
+      logging: false,
       migrations: [join(__dirname, 'migrations/*{.ts,.js}')],
       cli: {
         migrationsDir: 'src/migrations',
@@ -58,6 +59,7 @@ import * as moment from 'moment-timezone';
     GraphQLModule.forRoot({
       autoSchemaFile: true,
     }),
+    BatchModule,
   ],
   controllers: [],
   providers: [],

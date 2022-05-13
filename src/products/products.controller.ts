@@ -58,8 +58,6 @@ export class ProductController {
   @UseInterceptors(ClassSerializerInterceptor)
   @Get()
   getAll(@Query() query: PaginationInput): Promise<ProductsOutput> {
-    console.log(moment(new Date()).locale('ko'));
-
     return this.productService.getAll(
       Number(query.page),
       Number(query.pageSize),
