@@ -25,5 +25,5 @@ WORKDIR /
 
 ENV  ENV=prod
 
-CMD ["npm", "start:prod"]
+CMD ["npm", "run", "start"]
 EXPOSE 3002

@@ -18,7 +18,7 @@ import * as moment from 'moment-timezone';
     ConfigModule.forRoot({
       envFilePath: process.env.ENV === 'dev' ? '.env' : '.env.prod',
       isGlobal: true,
-      ignoreEnvFile: process.env.ENV === 'prod',
+      // ignoreEnvFile: process.env.ENV === 'prod',
       validationSchema: Joi.object({
         ENV: Joi.string().valid('dev', 'prod'),
         MYSQL_HOST: Joi.string().required(),
