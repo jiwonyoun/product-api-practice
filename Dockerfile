@@ -1,7 +1,7 @@
 # 1. create image with npm packages
 FROM node:14-alpine as installer
 RUN apk update
-WORKDIR /src
+WORKDIR /
 
 COPY package.json package-lock.json ./
 
@@ -9,7 +9,7 @@ RUN npm install
 
 # 2. bundling
 FROM installer as builder
-WORKDIR /src
+WORKDIR /
 
 COPY . .
 RUN ls -al
@@ -21,7 +21,7 @@ RUN nest build
 
 # 3. running
 FROM installer
-WORKDIR /src
+WORKDIR /
 
 ENV  ENV=prod
 
