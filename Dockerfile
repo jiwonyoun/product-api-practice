@@ -25,5 +25,5 @@ WORKDIR /
 
 ENV  ENV=prod
 
-CMD ["node", "dist/main.js"]
+CMD ["npm", "start:prod"]
 EXPOSE 3002
