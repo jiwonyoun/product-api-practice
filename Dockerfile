@@ -25,8 +25,8 @@ WORKDIR /app
 
 ENV  ENV=prod
 
-COPY --from=builder /app/dist ./dist
-COPY --from=builder /app/.env.prod ./
+COPY --from=builder /dist ./dist
+COPY --from=builder /.env.prod ./
 
 CMD ["node", "dist/main.js"]
-EXPOSE 3001
+EXPOSE 3002
