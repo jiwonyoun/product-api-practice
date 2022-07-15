@@ -16,7 +16,7 @@ import * as moment from 'moment-timezone';
 @Module({
   imports: [
     ConfigModule.forRoot({
-      envFilePath: process.env.ENV === 'dev' ? '.env' : 'env.prod',
+      envFilePath: process.env.ENV === 'dev' ? '.env' : '.env.prod',
       isGlobal: true,
       ignoreEnvFile: process.env.ENV === 'prod',
       validationSchema: Joi.object({
