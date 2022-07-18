@@ -23,7 +23,7 @@ RUN nest build
 FROM installer
 WORKDIR /
 
-ENV  ENV=prod
+ENV ENV=prod
 
 CMD ["npm", "run", "start"]
 EXPOSE 3002
